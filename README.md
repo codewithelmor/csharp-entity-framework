@@ -22,7 +22,7 @@ Here are some key features and concepts associated with Entity Framework:
 
 Overall, Entity Framework simplifies data access and helps developers focus more on the application's business logic rather than dealing with low-level database interactions.
 
-## Code First
+## Code-First Approach
 
 Entity Framework Code First is an approach in Entity Framework where you define your domain model using plain old C# objects (POCOs) and then generate the database from that model. It allows you to create a database without having to design it in a visual designer or write SQL scripts. The database schema is generated based on the classes you define in your code.
 
@@ -209,3 +209,47 @@ PM> Update-Database -Script
 ```
 
 These commands provide a way to manage the database schema in Entity Framework Code First, whether you are working with an initial database creation or evolving the schema over time through migrations.
+
+## Database-First Approach
+
+Entity Framework Database First is an approach in Entity Framework where you start with an existing database, and then generate the entity classes and DbContext based on that database. This is in contrast to Code First, where you start by defining your entity classes in code, and the database schema is generated from those classes.
+
+Here are the key steps involved in using Entity Framework Database First:
+
+1. **`Create a New EDMX File`**:
+
+* In Visual Studio, you can add a new ADO.NET Entity Data Model (EDMX) file to your project. This file will be used to define the conceptual model, which represents the entities in your database.
+
+2. **`Generate from Database`**:
+
+* In the EDMX designer, right-click and choose "Update Model from Database." This opens a wizard that allows you to connect to your existing database and select the tables/views/stored procedures you want to include in your model.
+
+3. **`Configure Entities`**:
+
+* Once the wizard completes, the EDMX file will contain entity classes that correspond to the tables in your database. You can now customize these entities by adding validation, additional properties, or navigation properties.
+
+4. **`Generate DbContext`**:
+
+* After configuring your entities, you can use the "Add Code Generation Item" feature to generate a DbContext class along with other necessary classes for your model.
+
+5. **`Use the DbContext in Your Application`**:
+
+* Instantiate your generated DbContext in your application and use it to query and manipulate data. You can use LINQ queries and other features of Entity Framework to interact with the database.
+
+```csharp
+using (var context = new YourGeneratedDbContext())
+{
+    var customers = context.Customers.ToList();
+    // Perform other operations...
+}
+```
+
+6. **`Updating Model from Database Changes`**:
+
+* If your database schema changes over time, you can update your model to reflect these changes. Right-click on the EDMX file and select "Update Model from Database" to bring in the changes.
+
+7. **`Database First and Code First Hybrid`**:
+
+* In some scenarios, you might use a combination of Database First and Code First. For example, you can generate the initial model from the database and then use Code First migrations to manage changes over time.
+
+Entity Framework Database First is useful when you have an existing database and want to quickly generate a model to work with in your application. It can be particularly beneficial in scenarios where the database schema is maintained separately from the application code or where you are working with a legacy database.
