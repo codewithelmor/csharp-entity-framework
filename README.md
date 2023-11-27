@@ -21,3 +21,89 @@ Here are some key features and concepts associated with Entity Framework:
 8. **`Database Providers`**: Entity Framework is designed to work with various database providers, including SQL Server, MySQL, PostgreSQL, and SQLite, among others. The choice of provider depends on the specific database system used by the application.
 
 Overall, Entity Framework simplifies data access and helps developers focus more on the application's business logic rather than dealing with low-level database interactions.
+
+## Code First
+
+Entity Framework Code First is an approach in Entity Framework where you define your domain model using plain old C# objects (POCOs) and then generate the database from that model. It allows you to create a database without having to design it in a visual designer or write SQL scripts. The database schema is generated based on the classes you define in your code.
+
+Here are the key steps involved in using Entity Framework Code First:
+
+1. **`Define POCO Classes`**:
+
+* Create C# classes to represent your domain model. These classes will typically include properties that correspond to the columns in your database tables.
+* You can use data annotations or the Fluent API to configure aspects of your model, such as specifying primary keys, foreign keys, and relationships between entities.
+
+```csharp
+public class Author
+{
+    public int AuthorId { get; set; }
+    public string Name { get; set; }
+
+    public ICollection<Book> Books { get; set; }
+}
+
+public class Book
+{
+    public int BookId { get; set; }
+    public string Title { get; set; }
+
+    public int AuthorId { get; set; }
+    public Author Author { get; set; }
+}
+```
+
+2. **`Create a DbContext`**:
+
+* Create a class that inherits from **`DbContext`**, which is a part of Entity Framework.
+* In the **`DbContext`** class, define **`DbSet`** properties for each entity you want to include in the database.
+
+```csharp
+public class LibraryContext : DbContext
+{
+    public DbSet<Author> Authors { get; set; }
+    public DbSet<Book> Books { get; set; }
+}
+```
+
+3. **`Connection String`**:
+
+* Specify a connection string in your application configuration that points to your database. Entity Framework will use this connection string to connect to the database.
+
+```xml
+<connectionStrings>
+    <add name="LibraryContext" 
+         connectionString="Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Library;Integrated Security=True;" 
+         providerName="System.Data.SqlClient" />
+</connectionStrings>
+```
+
+4. **`Database Initialization`**:
+
+* You can specify how Entity Framework initializes the database. This can include strategies such as dropping and recreating the database, creating it only if it doesn't exist, or using migrations for more controlled updates.
+
+```csharp
+Database.SetInitializer(new DropCreateDatabaseIfModelChanges<LibraryContext>());
+```
+
+5. **`Use the DbContext in Your Application`**:
+
+* Instantiate your **`DbContext`** in your application and use it to interact with the database.
+
+```csharp
+using (var context = new LibraryContext())
+{
+    var author = new Author { Name = "John Doe" };
+    var book = new Book { Title = "Entity Framework Basics", Author = author };
+
+    context.Authors.Add(author);
+    context.Books.Add(book);
+
+    context.SaveChanges();
+}
+```
+
+6. **`Generate Database`**:
+
+* When you run your application, Entity Framework will create the database based on your model and configuration. You don't have to write SQL scripts or manually create the database.
+
+Entity Framework Code First is a powerful approach that allows developers to focus on their domain model and application logic, while Entity Framework takes care of the database creation and interaction. It's particularly useful in scenarios where the database schema is evolving along with the application development.
