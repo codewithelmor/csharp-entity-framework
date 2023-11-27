@@ -107,3 +107,105 @@ using (var context = new LibraryContext())
 * When you run your application, Entity Framework will create the database based on your model and configuration. You don't have to write SQL scripts or manually create the database.
 
 Entity Framework Code First is a powerful approach that allows developers to focus on their domain model and application logic, while Entity Framework takes care of the database creation and interaction. It's particularly useful in scenarios where the database schema is evolving along with the application development.
+
+### Commands
+
+Entity Framework Code First uses a set of commands to perform various tasks related to database initialization, migrations, and interactions. These commands can be executed in the Package Manager Console within Visual Studio or using the .NET CLI. Here are some common 
+
+Entity Framework Code First commands:
+
+1. **`Enable Migrations`**:
+
+* This command enables migrations for your project, allowing you to create and apply database schema changes.
+
+```bash
+PM> Enable-Migrations
+```
+
+2. **`Add Migration`**:
+
+* This command creates a new migration file that contains the changes to the database schema based on your model changes.
+
+```bash
+PM> Add-Migration [MigrationName]
+```
+
+3. **`Update Database`**:
+
+* This command applies pending migrations to the database, updating the schema to match the current state of your model.
+
+```bash
+PM> Update-Database
+```
+
+* To update to a specific migration, you can use:
+
+```bash
+PM> Update-Database -TargetMigration [MigrationName]
+```
+
+4. **`View Migrations`**:
+
+* This command shows a list of migrations that have been applied and those that are pending.
+
+```bash
+PM> Get-Migrations
+```
+
+5. **`Remove Migration`**:
+
+* This command removes the last applied migration. Use with caution, as it can lead to data loss.
+
+```bash
+PM> Remove-Migration
+```
+
+6. **`Script Migrations`**:
+
+* This command generates a SQL script for a migration without applying it to the database.
+
+```bash
+PM> Script-Migration -From [PreviousMigration] -To [TargetMigration]
+```
+
+7. **`Seed Database`**:
+
+* This command is used to seed the database with initial or test data.
+
+```bash
+PM> Update-Database -TargetMigration: $InitialDatabase
+```
+
+8. **`Drop Database`**:
+
+* This command drops the database, and it's useful when you want to start fresh.
+
+```bash
+PM> Update-Database -TargetMigration: 0 -Force
+```
+
+9. **`Recreate Database`**:
+
+* This command drops and then recreates the database, applying all migrations.
+
+```bash
+PM> Update-Database -TargetMigration: 0 -Force -Script
+```
+
+10. **`Generate SQL Script for Migration`**:
+
+* This command generates a SQL script for a specific migration without applying it.
+
+```bash
+PM> Script-Migration -From [PreviousMigration] -To [TargetMigration]
+```
+
+11. **`Generate SQL Script for Update-Database`**:
+
+* This command generates a SQL script for applying pending migrations without actually updating the database.
+
+```bash
+PM> Update-Database -Script
+```
+
+These commands provide a way to manage the database schema in Entity Framework Code First, whether you are working with an initial database creation or evolving the schema over time through migrations.
